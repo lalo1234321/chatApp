@@ -26,12 +26,14 @@ class _CenterLoginState extends State<CenterLogin> {
             // en este apartado debemos de usar unas variables de controlador que definamos en este archivo
             textController: emailCtrl,
           ),
+          SizedBox(height: 20,),
           CustomInput(
             icon: Icons.lock,
             placeHolder: 'Password',
             textController: passCtrl,
             isPassword: true,
           ),
+          SizedBox(height: 20,),
           BtnAzul(
             texto: 'Ingresar', 
             onPressed: (){
