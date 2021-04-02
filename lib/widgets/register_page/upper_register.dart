@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 
 // se trabaja la parte de arriba del login porque este widget no cambiará su estado
-class UpperLogin extends StatelessWidget {
+class UpperRegister extends StatelessWidget {
   
   final String titulo;
 
-  const UpperLogin({
+  const UpperRegister({
     Key key, 
     @required this.titulo
   }) : super(key: key);
