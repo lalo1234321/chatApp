@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chat app',
       //esta página se encargará de saber si está autenticado o no, dependiendo de esto se enviará a una página o a otra
-      initialRoute: 'login', 
+      initialRoute: 'chat', 
       routes: appRoutes,
 
     );
