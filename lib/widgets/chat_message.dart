@@ -4,21 +4,32 @@ import 'package:flutter/material.dart';
 // debo de identificar cuando es un mensaje mio o de otra persona
 class ChatMessage extends StatelessWidget {
   // si el uid es igual al mio, quiere decir que es mensaje mio, caso contrario es otra persona
+  // animationController para que las burbujas entren con animación
   final String texto;
   final String uid;
+  final AnimationController animationController;
 
   const ChatMessage({
     Key key, 
-    this.texto, 
-    this.uid
+    @required this.texto, 
+    @required this.uid, 
+    @required this.animationController
   }) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: (this.uid == '123')
-      ? _myMessage()
-      : _notMyMessage(),
+    // para agregar la animación se necesita envol<ver el contenedor en un fadeTransition
+    // para que los mensajes se vean más naturales envolvemos el container en un SizeTransition
+    return FadeTransition(
+      opacity: animationController,
+      child: SizeTransition(
+        sizeFactor: CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+        child: Container(
+          child: (this.uid == '123')
+          ? _myMessage()
+          : _notMyMessage(),
+        ),
+      ),
     );
   }
 

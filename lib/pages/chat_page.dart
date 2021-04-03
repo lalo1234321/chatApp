@@ -6,18 +6,22 @@ class ChatPage extends StatefulWidget {
   _ChatPageState createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+// para mostrar animaciones debemos mezclar la clase padre con
+
+class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
+  // al mezclar con el TicketProivider ya podemos trabjar con muchas animaciones
+
 
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _estaEscribiendo = false;
   List<ChatMessage> _messages = [
-    ChatMessage(uid: '123', texto: 'Hola mundo',),
-    ChatMessage(uid: '1234231', texto: 'Hola mundo',),
-    ChatMessage(uid: '123', texto: 'Hola mundo',),
-    ChatMessage(uid: '1233234', texto: 'Hola mundo',),
-    ChatMessage(uid: '123', texto: 'Hola mundo',),
-    ChatMessage(uid: '123', texto: 'Hola mundo',),
+    // ChatMessage(uid: '123', texto: 'Hola mundo',),
+    // ChatMessage(uid: '1234231', texto: 'Hola mundo',),
+    // ChatMessage(uid: '123', texto: 'Hola mundo',),
+    // ChatMessage(uid: '1233234', texto: 'Hola mundo',),
+    // ChatMessage(uid: '123', texto: 'Hola mundo',),
+    // ChatMessage(uid: '123', texto: 'Hola mundo',),
   ];
 
   @override
@@ -120,12 +124,20 @@ class _ChatPageState extends State<ChatPage> {
   // aqui haremos instancias de los mensajes, cada vez que se presione el submit
   // Para insertar 
   _handleSubmit( String texto ) {
+
+    if(texto.length == 0) return;
+
     print(texto);
     _textController.clear();
     _focusNode.requestFocus();
 
-    final newMessage = new ChatMessage(uid: '123', texto: texto,);
+    final newMessage = new ChatMessage(
+      uid: '123', 
+      texto: texto,
+      animationController: AnimationController(vsync: this, duration: Duration(milliseconds: 500)),//el this está disponibler gracias a la mezcla  
+    );
     _messages.insert(0, newMessage);
+    newMessage.animationController.forward();
 
     setState(() {
       _estaEscribiendo = false;
