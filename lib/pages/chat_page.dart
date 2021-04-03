@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -10,6 +11,14 @@ class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _estaEscribiendo = false;
+  List<ChatMessage> _messages = [
+    ChatMessage(uid: '123', texto: 'Hola mundo',),
+    ChatMessage(uid: '1234231', texto: 'Hola mundo',),
+    ChatMessage(uid: '123', texto: 'Hola mundo',),
+    ChatMessage(uid: '1233234', texto: 'Hola mundo',),
+    ChatMessage(uid: '123', texto: 'Hola mundo',),
+    ChatMessage(uid: '123', texto: 'Hola mundo',),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +45,9 @@ class _ChatPageState extends State<ChatPage> {
           Flexible(
             // hay que recordar que el listView.builder se va generando con base en la demanda
             child: ListView.builder(
+              itemCount: _messages.length,
               itemBuilder: (BuildContext context, i) {
-                return Text('${i}');
+                return _messages[i];
               },
               reverse: true,
               physics: BouncingScrollPhysics(),
@@ -107,10 +117,16 @@ class _ChatPageState extends State<ChatPage> {
     );  
   }
 
+  // aqui haremos instancias de los mensajes, cada vez que se presione el submit
+  // Para insertar 
   _handleSubmit( String texto ) {
     print(texto);
     _textController.clear();
     _focusNode.requestFocus();
+
+    final newMessage = new ChatMessage(uid: '123', texto: texto,);
+    _messages.insert(0, newMessage);
+
     setState(() {
       _estaEscribiendo = false;
     });
