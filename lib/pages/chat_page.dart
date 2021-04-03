@@ -9,6 +9,7 @@ class _ChatPageState extends State<ChatPage> {
 
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
+  bool _estaEscribiendo = false;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,15 @@ class _ChatPageState extends State<ChatPage> {
               onSubmitted: _handleSubmit,
               onChanged: (String texto) {
                 //TODO cuando hay un valor para poder postear
-
+                // en este punto sabemos que el usuario está escribiendo, debemos de cambiar el bool con el setState
+                setState(() {
+                  if(texto.trim().length > 0) {
+                    _estaEscribiendo = true;
+                  } else {
+                    _estaEscribiendo = false;
+                  }
+                });
+                
               },
               decoration: InputDecoration.collapsed(
                 hintText: 'Enviar mensaje'
@@ -78,11 +87,18 @@ class _ChatPageState extends State<ChatPage> {
 
           Container(
             margin: EdgeInsets.symmetric( horizontal: 4.0 ),
-            child: IconButton(
-              icon: Icon( Icons.send, color: Colors.blue, ),
-              onPressed: () {
-                
-              },
+            child: IconTheme(
+              data: IconThemeData( color: Colors.blue[400] ),
+              child: IconButton(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                icon: Icon( Icons.send ),
+                onPressed: (_estaEscribiendo) 
+                          ?
+                          () => _handleSubmit( _textController.text.trim() )
+                          :
+                          null
+              ),
             )
           )
          ],
@@ -95,6 +111,9 @@ class _ChatPageState extends State<ChatPage> {
     print(texto);
     _textController.clear();
     _focusNode.requestFocus();
+    setState(() {
+      _estaEscribiendo = false;
+    });
   }
 
 }
