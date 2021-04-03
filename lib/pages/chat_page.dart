@@ -144,4 +144,19 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     });
   }
 
+  // cuando terminemos de usar esta página debemos de eliminarla, debido a que hacemos muchas instancias 
+  // del animatorController, y en un futuro usaremos sockets, eso hará que se degrade el rendimiento de
+  // la app
+
+  @override
+  void dispose() {
+    // TODO off del socket
+    // TODO: implement dispose
+    for( ChatMessage message in _messages ) {
+      message.animationController.dispose();
+    }
+    super.dispose();
+  }
+
+
 }
