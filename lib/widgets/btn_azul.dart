@@ -18,7 +18,7 @@ class BtnAzul extends StatelessWidget {
       onPressed: this.onPressed,
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(10),
-        backgroundColor: MaterialStateProperty.all(Colors.blue),
+        backgroundColor:  (this.onPressed==null) ? MaterialStateProperty.all(Colors.grey):MaterialStateProperty.all(Colors.blue),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),

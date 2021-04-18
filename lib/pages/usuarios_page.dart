@@ -1,5 +1,8 @@
 import 'package:chat_app/models/usuario.dart';
+import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -9,31 +12,50 @@ class UsuariosPage extends StatefulWidget {
 
 class _UsuariosPageState extends State<UsuariosPage> {
 
+  
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   final usuarios = [
-    Usuario(uid: '1',nombre: 'Lalo', email: 'test1@test', online: true),
-    Usuario(uid: '2',nombre: 'Edgar', email: 'test2@test', online: true),
-    Usuario(uid: '3',nombre: 'Luis', email: 'test3@test', online: true),
-    Usuario(uid: '4',nombre: 'Alberto', email: 'test4@test', online: false)
+    // Usuario(uid: '1',nombre: 'Lalo', email: 'test1@test', online: true),
+    // Usuario(uid: '2',nombre: 'Edgar', email: 'test2@test', online: true),
+    // Usuario(uid: '3',nombre: 'Luis', email: 'test3@test', online: true),
+    // Usuario(uid: '4',nombre: 'Alberto', email: 'test4@test', online: false)
   ];
 
   @override
   Widget build(BuildContext context) {
+    // para extraer la información del usuario registrado
+    final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+    final usuario = authService.usuario;
+    print(socketService.serverStatus);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi nombre', style: TextStyle(color: Colors.black87),),
+        title: Text(usuario.nombre, style: TextStyle(color: Colors.black87),),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.exit_to_app, color: Colors.black87),
-          onPressed: () => print('hoola'),
+          onPressed: () {
+            //TODO desconectar de nuestro socket server
+            // como yo no quiero instanciar todo el authservice podemos entrar a los métodos estáticos
+            // por eso es imporetante trabajar con métodos estáticos según nos convenga
+            socketService.disconnect();
+            Navigator.pushReplacementNamed(context, 'login');
+            AuthService.deleteToken();
+            //  en este punto ya se borró el token y cuand0 reiniciemos la app la loading page nos
+            // redirigirá al login page
+          },
         ),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only( right: 10 ),
             // child: Icon(Icons.check_circle, color: Colors.blue,),
-            child: Icon(Icons.bolt, color: Colors.red,),
+            child: ( socketService.serverStatus == ServerStatus.Online) 
+                          ? 
+                    Icon(Icons.check_circle, color: Colors.blue,)
+                            :
+                    Icon(Icons.bolt, color: Colors.red,),
           )
         ],
       ),
