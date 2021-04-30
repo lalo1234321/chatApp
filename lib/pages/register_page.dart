@@ -20,7 +20,7 @@ class RegisterPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                UpperRegister(titulo:'Registro'),
+                UpperRegister(titulo:'Registro',subtitulo: 'hola mundo',),
                 CenterRegister(),
                 LabelsRegister(route:'login'),
                 // Text('Términos y condiciones de uso', style: TextStyle(fontWeight: FontWeight.w200))

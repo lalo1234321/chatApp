@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class UpperRegister extends StatelessWidget {
   
   final String titulo;
-
+  final String subtitulo;
   const UpperRegister({
     Key key, 
-    @required this.titulo
+    @required this.titulo, this.subtitulo
   }) : super(key: key);
   
   @override
