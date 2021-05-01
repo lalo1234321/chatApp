@@ -27,7 +27,7 @@ class SocketService with ChangeNotifier {
     
     // forceNew cada vez que se conecta o se desconecta se crea una nueva instancia en el backend
     // Dart client
-    this._socket = IO.io('http://192.168.100.6:3002', {
+    this._socket = IO.io('http://192.168.100.109:3002', {
       'transports': ['websocket'],
       'autoConnect': true,
       'forceNew': true,

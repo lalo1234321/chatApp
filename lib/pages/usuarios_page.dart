@@ -1,5 +1,6 @@
 import 'package:chat_app/models/usuario.dart';
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/usuarios_service.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,14 @@ class _UsuariosPageState extends State<UsuariosPage> {
   final  usuarioService = new UsuarioService();  
   RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<Usuario> usuarios = [];
+  // cuando entremos a la página debemos de cargar los ususarios
+  @override
+  void initState() { 
+    this._cargarUsuarios();
+    super.initState();
+    
+  }
+
   // final usuarios = [
   //   // Usuario(uid: '1',nombre: 'Lalo', email: 'test1@test', online: true),
   //   // Usuario(uid: '2',nombre: 'Edgar', email: 'test2@test', online: true),
@@ -105,6 +114,16 @@ class _UsuariosPageState extends State<UsuariosPage> {
               borderRadius: BorderRadius.circular(100)
             ),
           ),
+          // agregar onTap para saber a qué usuario apuntar
+          onTap: () {
+            // listen en false porque no quiero que este escuchando los cambios
+            // Debo de invesigar cuando ponerle true y cuando false
+            final chatService = Provider.of<ChatService>(context, listen: false);
+            chatService.usuarioPara = usuario;
+            print(usuario.nombre);
+
+            Navigator.pushNamed(context, 'chat');
+          },
         );
   }
 

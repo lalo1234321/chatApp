@@ -44,7 +44,7 @@ class AuthService with ChangeNotifier{
       'password': password
     };
   // la dirección del server socket es sin la diagonal ejemplo: http://192.168.100.6:3002
-    final resp = await http.post('http://192.168.100.6:3002/api/login', 
+    final resp = await http.post('http://192.168.100.109:3002/api/login', 
       body: jsonEncode(data),
       headers: {
         'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ class AuthService with ChangeNotifier{
       'password': password
     };
 
-    final resp = await http.post('http://192.168.100.6:3002/api/login/new', 
+    final resp = await http.post('http://192.168.100.109:3002/api/login/new', 
       body: jsonEncode(data),
       headers: {
         'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ class AuthService with ChangeNotifier{
   Future<bool> isLoogedIn() async{
     final token = await this._storage.read(key: 'token');
     print(token); 
-    final resp = await http.get('http://192.168.100.6:3002/api/login/renew', 
+    final resp = await http.get('http://192.168.100.109:3002/api/login/renew', 
       headers: {
         'Content-Type': 'application/json',
         'token': token

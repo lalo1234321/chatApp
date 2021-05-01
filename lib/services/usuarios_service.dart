@@ -10,7 +10,7 @@ class UsuarioService {
   Future<List<Usuario>> getUsuarios() async{
     try {
 
-      final resp = await http.get('http://192.168.100.6:3002/api/usuarios', 
+      final resp = await http.get('http://192.168.100.109:3002/api/usuarios', 
       
         headers: {
           'Content-Type': 'application/json',

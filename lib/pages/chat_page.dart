@@ -1,5 +1,9 @@
+import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -11,7 +15,9 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
   // al mezclar con el TicketProivider ya podemos trabjar con muchas animaciones
 
-
+  ChatService chatService;
+  SocketService socketService;
+  AuthService authService;
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _estaEscribiendo = false;
@@ -25,7 +31,35 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
   ];
 
   @override
+  void initState() { 
+    super.initState();
+    this.chatService   = Provider.of<ChatService>(context, listen: false);
+    this.socketService = Provider.of<SocketService>(context, listen: false);
+    this.authService = Provider.of<AuthService>(context, listen: false);
+
+    this.socketService.socket.on('mensaje-personal', _escucharMensaje);
+  }
+
+  void _escucharMensaje( dynamic payload ) {
+    print('tengo mensaje $payload');
+    ChatMessage message = new ChatMessage(
+      texto: payload['msg'],
+      uid: payload['de'],
+      animationController: AnimationController(vsync: this, duration: new Duration(milliseconds: 300)),
+    );
+
+    setState(() {
+      _messages.insert(0, message);
+    });
+
+    // necesitamos arrancar la animación
+    message.animationController.forward();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    final usuarioPara = chatService.usuarioPara; 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -33,11 +67,11 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
           child: Column(
             children: <Widget>[
               CircleAvatar(
-                child: Text('Te', style: TextStyle(fontSize: 12)),
+                child: Text(usuarioPara.nombre.substring(0,2), style: TextStyle(fontSize: 12)),
                 backgroundColor: Colors.blue[100],
                 maxRadius: 15,
               ),
-              Text('Test1',style: TextStyle(color: Colors.black, fontSize: 12),)
+              Text(usuarioPara.nombre,style: TextStyle(color: Colors.black, fontSize: 12),)
             ],
           ),
         ),
@@ -142,6 +176,15 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     setState(() {
       _estaEscribiendo = false;
     });
+
+
+    // en este punto ya pudimos enviar mensajes al socket service, pero hace falta hacer que el 
+    // servidor esté a la escucha de éstos 
+    this.socketService.emit('mensaje-personal',{
+      'de'   : this.authService.usuario.iud,
+      'para' : this.chatService.usuarioPara.iud,
+      'msg'  : texto 
+    });
   }
 
   // cuando terminemos de usar esta página debemos de eliminarla, debido a que hacemos muchas instancias 
@@ -155,6 +198,9 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     for( ChatMessage message in _messages ) {
       message.animationController.dispose();
     }
+    // para evitar escuchar los mensajes de otras personas matar el canal de conexión hasta que 
+    // se vuelva a conectar
+    // this.socketService.socket.off(event)
     super.dispose();
   }
 
